@@ -12,6 +12,7 @@ row = []
 col = []
 DELTA = 0.0001
 length = 75888
+alpha = 0.8
 count = [0] * length
 
 for line in lines: 
@@ -34,7 +35,7 @@ count = 0
 while True:
     
     count += 1
-    new = matrix * poss
+    new = alpha * matrix * poss + (1 - alpha) * poss
     
     check_stable = True
     for i in range(length):
@@ -45,3 +46,12 @@ while True:
     print(count)
     if check_stable:
         break
+
+max_i = 0
+max_v = 0
+for i in range(length):
+    if poss[i, 0] > max_v:
+        max_v = poss[i, 0]
+        max_i = i
+
+print(max_i)

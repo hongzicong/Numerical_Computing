@@ -28,12 +28,15 @@ err7 = [[0 for i in range(iter_count)] for j in range(len(n))]
 err8 = [[0 for i in range(iter_count)] for j in range(len(n))]
 
 
+def Gauss(A)
+
+
 for circle in range(count):
     for n_i in range(len(n)):
         
         # initialize the matrix
         A = np.random.randn(n[n_i], n[n_i])
-        A = A.T.dot(A)
+        A = A.T * A
         
         temp_A = A.copy()
         b = np.random.randn(n[n_i], 1)
