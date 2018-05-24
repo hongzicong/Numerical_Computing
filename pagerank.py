@@ -10,7 +10,7 @@ lines = f.readlines()
 
 row = []
 col = []
-DELTA = 0.0001
+DELTA = 0.00000001
 length = 75888
 alpha = 0.8
 count = [0] * length

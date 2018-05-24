@@ -3,10 +3,11 @@ import time as tm
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import scipy as sp
 
 time_start = tm.time()
 
-n =[10, 50, 100, 200]
+n = [10, 50, 100, 200]
 
 time_used1 = [0 for i in range(len(n))]
 time_used2 = [0 for i in range(len(n))]
@@ -28,15 +29,15 @@ err7 = [[0 for i in range(iter_count)] for j in range(len(n))]
 err8 = [[0 for i in range(iter_count)] for j in range(len(n))]
 
 
-def Gauss(A)
-
-
 for circle in range(count):
     for n_i in range(len(n)):
         
         # initialize the matrix
-        A = np.random.randn(n[n_i], n[n_i])
-        A = A.T * A
+        A = np.random.rand(1, n[n_i])
+        A = np.diag(A[0, :])
+        U = np.random.rand(n[n_i], n[n_i])
+        U = sp.linalg.orth(U)
+        A = np.mat(U) * np.mat(A) * np.mat(U).T
         
         temp_A = A.copy()
         b = np.random.randn(n[n_i], 1)
@@ -70,7 +71,6 @@ for circle in range(count):
         time_end = tm.time()
         time_used1[n_i] = time_end - time_begin
         
-        
         # Column Principle
         A = temp_A.copy()
         b = temp_b.copy()
@@ -98,7 +98,6 @@ for circle in range(count):
             x[0, i] = b[i, 0] / A[i, i]
         time_end = tm.time()
         time_used2[n_i] = time_end - time_begin
-        
         
         # Jacobi
         A = temp_A.copy()
@@ -209,13 +208,13 @@ for circle in range(count):
         time_used7[n_i] = time_end - time_begin 
 
 
-        # SOR - 2
+        # SOR - 1.8
         A = temp_A.copy()
         b = temp_b.copy()
         time_begin = tm.time()
         temp_x = beg_x.copy()
         next_x = np.empty((1, n[n_i]))
-        omega = 2
+        omega = 1.8
         
         for iter_c in range(iter_count):
             for i in range(n[n_i]):
@@ -237,14 +236,13 @@ for circle in range(count):
         time_used8[n_i] = time_end - time_begin 
 
 
-
         # CG
         A = temp_A.copy()
         b = temp_b.copy()
-        time_begin = tm.time()
         temp_x = beg_x.copy()
         next_x = np.empty((1, n[n_i]))
-        
+        time_begin = tm.time()
+
         # initialize r
         r = b - A.dot(temp_x.T)
         p = r.copy()
@@ -255,7 +253,7 @@ for circle in range(count):
             temp_x = temp_x.T + alpha * p
             
             new_r = r - alpha * A.dot(p)
-            belta = (new_r.T.dot(new_r)) / (r.T.dot(r))
+            belta = ((new_r.T.dot(new_r)) / (r.T.dot(r)))[0, 0]
             p = new_r + belta * p
             r = new_r.copy()
             
@@ -267,7 +265,7 @@ for circle in range(count):
         
         time_end = tm.time()
         time_used6[n_i] = time_end - time_begin 
-        
+     
 
 # exercise 1
 fig = plt.figure(1)
@@ -296,7 +294,7 @@ ax.plot(n, time_used3, color = 'pink', label = 'Jacobi')
 ax.plot(n, time_used4, color = 'g', label = 'Gauss-Seidel')
 ax.plot(n, time_used5, color = 'b', label = 'SOR - 0.5')
 ax.plot(n, time_used7, color = 'y', label = 'SOR - 1.5')
-ax.plot(n, time_used8, color = 'm', label = 'SOR - 2.0')
+ax.plot(n, time_used8, color = 'm', label = 'SOR - 1.8')
 ax.plot(n, time_used6, color = 'r', label = 'CG')
 
 plt.legend(loc='upper left')
@@ -317,7 +315,7 @@ ax.plot([i for i in range(iter_count)], err3[0], color = 'pink', label = 'Jacobi
 ax.plot([i for i in range(iter_count)], err4[0], color = 'g', label = 'Gauss-Seidel')
 ax.plot([i for i in range(iter_count)], err5[0], color = 'b', label = 'SOR - 0.5')
 ax.plot([i for i in range(iter_count)], err7[0], color = 'y', label = 'SOR - 1.5')
-ax.plot([i for i in range(iter_count)], err8[0], color = 'm', label = 'SOR - 2.0')
+ax.plot([i for i in range(iter_count)], err8[0], color = 'm', label = 'SOR - 1.8')
 ax.plot([i for i in range(iter_count)], err6[0], color = 'r', label = 'CG')
 
 plt.legend(loc='upper left')
